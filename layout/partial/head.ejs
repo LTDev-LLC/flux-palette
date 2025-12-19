@@ -11,18 +11,30 @@
 <% } %>
 <%
   var palettes = palette_list ? palette_list() : [],
-    defaultKey = theme.palette_selector ? theme.palette_selector.default : null,
-    defaultPalette = null;
-  if (palettes.length) {
-    if (defaultKey) {
-      defaultPalette = palettes.find(function (p) { return p.key === defaultKey });
-    }
-    if (!defaultPalette) {
-      defaultPalette = palettes[0];
-    }
+    defaultKey = (
+        theme.sidebar?.palette_selector && theme.sidebar.palette_selector?.default
+    ) ? theme.sidebar.palette_selector.default_palette : 'abyssal-blue';
+  var hasDefault = palettes.some(function (p) { return p.key === defaultKey; });
+  if (!hasDefault && palettes.length) {
+    defaultKey = palettes[0].key;
   }
-  var defaultFile = defaultPalette ? defaultPalette.file : 'abyssal-blue.css';
 %>
-<link id="palette-css" rel="stylesheet" href="<%= url_for('/css/palettes/' + defaultFile) %>">
+<script>
+  (function() {
+    var STORAGE_KEY = 'flux-palette',
+      fallback = '<%= defaultKey %>';
+    key = fallback;
+    try {
+      var stored = localStorage.getItem(STORAGE_KEY);
+      if (stored)
+        key = stored;
+    } catch (e) {}
+    document.documentElement.setAttribute('data-palette', String(key).replace(/[^a-zA-Z0-9_-]/g, ''));
+  })();
+</script>
+<link rel="stylesheet" href="<%= url_for('/css/palettes.css') %>">
 <link rel="stylesheet" href="<%= url_for('/css/base.css') %>">
-<script src="<%= url_for('/js/encrypted-post.js') %>"></script>
+<% if (theme?.sidebar?.social_buttons?.enabled && theme.sidebar.social_buttons?.inject_iconify) { %>
+<script src="https://cdn.jsdelivr.net/npm/iconify-icon/dist/iconify-icon.min.js"></script>
+<% } %>
+<script src="<%= url_for('/js/main.js') %>"></script>

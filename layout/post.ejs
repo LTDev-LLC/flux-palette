@@ -33,12 +33,13 @@
       <a class="post-next" href="<%= url_for(page.next.path) %>"><%= page.next.title %> →</a>
       <% } %>
     </nav>
-    <% const shortLink = short_url(page); %>
-    <% const shortHash = short_hash(page); %>
-    <% if (shortLink && shortHash) { %>
-    <span class="post-shortlink">
-      <a href="<%= shortLink %>">#<%= shortHash %></a>
-    </span>
+    <% if (page.short_hash) { %>
+    <a href="<%= url_for('/s/' + page.short_hash + '/') %>">
+      #<%= page.short_hash %>
+    </a>
     <% } %>
   </div>
 </article>
+<% if (page.encrypted) { %>
+<script src="<%= url_for('/js/encrypted-post.js') %>"></script>
+<% } %>

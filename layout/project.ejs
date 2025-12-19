@@ -1,0 +1,41 @@
+<article class="post-single">
+  <h1 class="post-title">
+    <% if (page.project && page.project.password) { %>
+    <%- partial('partial/lock') %>
+    <% } %>
+    <%= page.title || (page.project && page.project.title) %>
+  </h1>
+  <% if (page.project) { %>
+  <div class="post-meta">
+    <time datetime="<%= date_xml(page.project.date) %>">
+      <%= date(page.project.date, config.date_format || 'YYYY-MM-DD') %>
+    </time>
+    <% if (page.project.project_tags && page.project.project_tags.length) { %>
+    <span class="meta-sep">•</span>
+    <span>
+      <% page.project.project_tags.forEach(function(tag, i) { %>
+      <%= tag %><%= i < page.project.project_tags.length - 1 ? ', ' : '' %>
+      <% }); %>
+    </span>
+    <% } %>
+  </div>
+  <div class="post-content">
+    <%- page.project.content || '' %>
+    <div class="post-meta-bottom">
+      <% if (page.project.project_url) { %>
+      <a href="<%= page.project.project_url %>" class="read-more" target="_blank" rel="noopener">
+        View project
+      </a>
+      <% } %>
+      <% var hash = short_hash_for(page.project.path); %>
+      <% if (hash) { %>
+      <a href="<%= url_for('/s/' + hash + '/') %>">
+        #<%= hash %>
+      </a>
+      <% } %>
+    </div>
+  </div>
+  <% } else { %>
+  <p>Project data missing.</p>
+  <% } %>
+</article>

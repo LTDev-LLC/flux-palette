@@ -13,13 +13,15 @@ A responsive blog/journal [Hexo](https://hexo.io/) theme designed around the ide
 
 - Mobile friendly
 - Multiple [color palettes](/source/css/palettes/)
-  * Has support for user selection via select dropdown or can be disabled within the config.
+  * Has support for user selection via select dropdown or can be disabled within the config
 - Password encrypted posts
 - Pre-compile JavaScript via [swc](https://swc.rs/)
-  * Intended for compiling post decryption JavaScript; will compile anything sent to the UI.
 - Approx. read time (default 238 wpm)
 - RSS feed generator
 - URL shortener/post hash generator
+- Projects listings
+- Social links/icons
+- Local search
 - Archived post listing
 
 ## Install
@@ -27,16 +29,17 @@ A responsive blog/journal [Hexo](https://hexo.io/) theme designed around the ide
 1. In the `root` directory:
    * Optionally, install `@swc/core` for use with pre-compilation.
 
-```git
-$ git clone https://github.com/LouisT/flux-palette.git themes/flux-palette
+```bash
+$ git clone --depth=1 https://github.com/LouisT/flux-palette.git themes/flux-palette ; rm -rf !$/.git
 $ npm install @swc/core --save
 ```
 
-OR, if pushing your root to git, use as a git sub module:
+OR updating:
 
-```
-$ git submodule add git@github.com:LouisT/flux-palette.git themes/flux-palette
-$ npm install @swc/core --save
+```bash
+$ cp themes/flux-palette/_config.yml theme-config.yml ; rm -rf themes/flux-palette
+$ git clone --depth=1 https://github.com/LouisT/flux-palette.git themes/flux-palette ; rm -rf !$/.git
+$ mv theme-config.yml themes/flux-palette/_config.yml
 ```
 
 2. Change the `theme` property in the `config.yml` file.
@@ -73,6 +76,38 @@ date: 2025-12-10 00:00:00
 read_time_minutes: 4
 read_time_words: 764
 ---
+```
+
+### Social listings
+You can display social links/icons in the sidenav by adding a `social` config to either the root `_config.yml` or the theme config.
+```yml
+social:
+  - name: GitHub
+    url: https://github.com/LouisT/flux-palette
+    icon: mdi:github
+  - name: Website
+    url: https://flux-palette.pages.dev/
+    icon: material-symbols:link
+
+```
+
+### Projects listings
+
+You can add a list of active projects using a `source/_projects` folder similar to how posts work.
+
+##### Example `source/_projects/flux-palette.md`
+
+```yml
+---
+title: Flux Palette
+date: 2025-12-1
+project_url: https://github.com/LouisT/flux-palette
+project_summary: "The Flux Palette source."
+project_tags:
+  - javascript
+  - hexo
+---
+This is a post about my project...
 ```
 
 ### _config.yml

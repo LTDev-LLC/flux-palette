@@ -1,42 +1,189 @@
-<% page.posts = page.posts || site.posts; %>
-<section class="post-list">
-  <% page.posts.sort('date', -1).forEach(function(post) { %>
-  <article class="post-card">
-    <div class="post-meta-top">
-      <h2 class="post-title">
-        <a href="<%= url_for(post.path) %>"><%= post.title %></a>
-        <% if (post.encrypted) { %>
-        <%- partial('partial/lock') %>
-        <% } %>
-      </h2>
-    </div>
+<% var homeMode = (theme.home && theme.home.mode) || 'blog'; %>
+
+<% if (homeMode === 'projects') { %>
+<section class="projects-page post-index">
+  <%
+    // Use the same per-page value as Hexo's index generator
+    var perPage = (config.index_generator && config.index_generator.per_page) || config.per_page || 10;
+
+    var current = page.current || 1;
+
+    // Get ALL projects (from _projects + project:true posts) via helper
+    // Assumes recent_projects(limit) will return "limit" items; pass a big number to effectively get all.
+    var allProjects = (typeof recent_projects === 'function')
+      ? recent_projects(9999)
+      : [];
+
+    var totalProjects = allProjects.length;
+    var totalPages = perPage > 0 ? Math.ceil(totalProjects / perPage) : 1;
+
+    var start = perPage > 0 ? perPage * (current - 1) : 0;
+    var end   = perPage > 0 ? start + perPage : totalProjects;
+    var projects = allProjects.slice(start, end);
+
+    // Pagination for projects mode
+    var projPrev = current > 1 ? current - 1 : 0;
+    var projNext = current < totalPages ? current + 1 : 0;
+
+    var projPrevLink = projPrev > 0
+      ? (projPrev === 1 ? '/' : '/page/' + projPrev + '/')
+      : '';
+
+    var projNextLink = projNext > 0
+      ? '/page/' + projNext + '/'
+      : '';
+  %>
+
+  <% if (projects.length) { %>
+  <% projects.forEach(function(project) { %>
+  <article class="post-card project-card">
+    <h2 class="post-title">
+      <% if (project.password) { %>
+      <%- partial('partial/lock') %>
+      <% } %>
+      <a href="<%= url_for(project.path) %>"><%= project.title %></a>
+    </h2>
+
     <div class="post-meta">
-      <time datetime="<%= date_xml(post.date) %>">
-        <%= date(post.date, config.date_format || 'YYYY-MM-DD') %> - <%= read_time(post, true) %>
+      <time datetime="<%= date_xml(project.date) %>">
+        <%= date(project.date, config.date_format || 'YYYY-MM-DD') %>
       </time>
-      <% if (post.tags && post.tags.length) { %>
-      <span class="meta-sep">•</span>
-      <span class="tags">
-        <% post.tags.forEach(function(tag, i) { %>
-        <a href="<%= url_for(tag.path) %>"><%= tag.name %></a><%= i < post.tags.length - 1 ? ', ' : '' %>
-        <% }) %>
+
+      <% if (project.project_tags && project.project_tags.length) { %>
+      <span class="meta-sep">-</span>
+      <span>
+        <% project.project_tags.forEach(function(tag, i) { %>
+        <%= tag %><%= i < project.project_tags.length - 1 ? ', ' : '' %>
+        <% }); %>
+      </span>
+      <% } %>
+
+      <% if (project.read_time_text || project.read_time) { %>
+      <span class="meta-sep">-</span>
+      <span class="post-readtime">
+        <%= project.read_time_text || (project.read_time && project.read_time.text) %>
       </span>
       <% } %>
     </div>
-    <% const preview = strip_html(post.excerpt || post.content); %>
+
     <div class="post-excerpt">
-      <%= preview.length > 200 ? preview.substring(0, 200) + '…' : preview %>
+      <% if (project.project_summary) { %>
+      <%= project.project_summary %>
+      <% } else if (project.excerpt) { %>
+      <%- strip_html(project.excerpt).substring(0, 220) %>
+      <% } else { %>
+      <%- strip_html(project.content).substring(0, 220) %>
+      <% } %>
     </div>
+
     <div class="post-meta-bottom">
-      <a class="read-more" href="<%= url_for(post.path) %>">Read more →</a>
-      <% const shortLink = short_url(post); %>
-      <% const shortHash = short_hash(post); %>
-      <% if (shortLink && shortHash) { %>
-      <span class="post-shortlink">
-        <a href="<%= shortLink %>">#<%= shortHash %></a>
-      </span>
+      <nav>
+        <a href="<%= url_for(project.path) %>" class="read-more">
+          Read more
+        </a>
+        <% if (project.project_url) { %>
+        <span class="meta-sep">&nbsp;</span>
+        <a href="<%= project.project_url %>" class="read-more" target="_blank" rel="noopener">
+          View project
+        </a>
+        <% } %>
+      </nav>
+
+      <% var hash = short_hash_for(project.path); %>
+      <% if (hash) { %>
+      <a href="<%= url_for('/s/' + hash + '/') %>">
+        #<%= hash %>
+      </a>
       <% } %>
     </div>
   </article>
-  <% }) %>
+  <% }); %>
+
+  <% if (totalPages > 1) { %>
+  <nav class="pagination">
+    <% if (projPrev) { %>
+    <a class="prev" href="<%= url_for(projPrevLink) %>">
+      &laquo; Newer
+    </a>
+    <% } %>
+    <span class="meta-sep">&nbsp;</span>
+    <% if (projNext) { %>
+    <a class="next" href="<%= url_for(projNextLink) %>">
+      Older &raquo;
+    </a>
+    <% } %>
+  </nav>
+  <% } %>
+  <% } else { %>
+  <p>
+    No projects have been defined yet. Add files under
+    <code>source/_projects</code>.
+  </p>
+  <% } %>
 </section>
+
+<% } else { %>
+<section class="post-index">
+  <% page.posts.each(function(post) { %>
+  <article class="post-card">
+    <h2 class="post-title">
+      <a href="<%= url_for(post.path) %>"><%= post.title %></a>
+      <% if (post.encrypted) { %>
+      <%- partial('partial/lock') %>
+      <% } %>
+    </h2>
+
+    <div class="post-meta">
+      <time datetime="<%= date_xml(post.date) %>">
+        <%= date(post.date, config.date_format || 'YYYY-MM-DD') %>
+      </time>
+
+      <% if (post.categories && post.categories.length) { %>
+      <span class="meta-sep">-</span>
+      <span>
+        <% post.categories.forEach(function(cat, i) { %>
+        <a href="<%= url_for(cat.path) %>"><%= cat.name %></a><%= i < post.categories.length - 1 ? ', ' : '' %>
+        <% }); %>
+      </span>
+      <% } %>
+      <% if (post.read_time_text || post.read_time) { %>
+      <span class="meta-sep">-</span>
+      <span class="post-readtime">
+        <%= post.read_time_text || (post.read_time && post.read_time.text) %>
+      </span>
+      <% } %>
+    </div>
+    <div class="post-excerpt">
+      <% if (post.excerpt) { %>
+      <%- strip_html(post.excerpt).substring(0, 220) %>
+      <% } else { %>
+      <%- strip_html(post.content).substring(0, 220) %>
+      <% } %>
+    </div>
+    <div class="post-meta-bottom">
+      <a class="read-more" href="<%= url_for(post.path) %>">Read more →</a>
+      <% if (post.short_hash) { %>
+      <a href="<%= url_for('/s/' + post.short_hash + '/') %>">
+        #<%= post.short_hash %>
+      </a>
+      <% } %>
+    </div>
+  </article>
+  <% }); %>
+  <% if (page.prev || page.next) { %>
+  <nav class="pagination">
+    <% if (page.prev) { %>
+    <a class="prev" href="<%= url_for(page.prev_link) %>">
+      &laquo; Newer
+    </a>
+    <% } %>
+    <span class="meta-sep">&nbsp;</span>
+    <% if (page.next) { %>
+    <a class="next" href="<%= url_for(page.next_link) %>">
+      Older &raquo;
+    </a>
+    <% } %>
+  </nav>
+  <% } %>
+</section>
+<% } %>

@@ -146,8 +146,15 @@ hexo.extend.filter.register('after_generate', async function () {
                 },
                 module: { type: 'es6' },
                 sourceMaps: false,
-                minify,
             })).code;
+
+            // If minify, then minify
+            if (minify) {
+                compiled = (await swc.minify(compiled, {
+                    compress: true,
+                    mangle: true
+                })).code;
+            }
         } catch (err) {
             ctx.log.error('[swc-compiler] SWC failed for %s (keeping original)', routePath);
             ctx.log.error(err);

@@ -2,6 +2,11 @@
   <h3>About</h3>
   <p><%= config.description || 'Just a dumb journal.' %></p>
 </div>
+<% if (has_social_buttons()) { %>
+<div class="sidebar-section social-buttons">
+    <%- social_buttons() %>
+</div>
+<% } %>
 <div class="sidebar-section">
   <h3>Recent Posts</h3>
   <ul>
@@ -15,27 +20,47 @@
     <% }) %>
   </ul>
 </div>
-<% if (theme.palette_selector.enabled) { %>
+<%
+var sidebarCfg = theme.sidebar || {},
+  rpCfg = sidebarCfg.recent_projects || {},
+  rpEnabled = rpCfg.enabled !== false,
+  rpLimit = rpCfg.limit || 5,
+  recentProjects = (rpEnabled && typeof recent_projects === 'function') ? recent_projects(rpLimit) : [];
+%>
+<% if (rpEnabled && recentProjects.length) { %>
+<div class="sidebar-section">
+  <h3>Recent Projects</h3>
+  <ul>
+    <% recentProjects.forEach(function(project) { var href = project.path ? url_for(project.path): (project.project_url || '#'); %>
+    <li>
+      <a href="<%= href %>">
+        <% if (project.password) { %>
+        <%- partial('partial/lock') %>
+        <% } %>
+        <span><%= project.title %></span>
+      </a>
+    </li>
+    <% }); %>
+  </ul>
+</div>
+<% } %>
+<% if (theme.sidebar?.palette_selector?.enabled) { %>
 <%
   var palettes = palette_list ? palette_list() : [],
-    defaultKey = theme.palette_selector ? theme.palette_selector.default : null,
-    defaultPalette = null;
-  if (palettes.length) {
-    if (defaultKey) {
-      defaultPalette = palettes.find(function (p) { return p.key === defaultKey});
-    }
-    if (!defaultPalette) {
-      defaultPalette = palettes[0];
-    }
+    defaultKey = (
+        theme.sidebar?.palette_selector && theme.sidebar.palette_selector?.default
+    ) ? theme.sidebar.palette_selector.default_palette : 'abyssal-blue',
+    hasDefault = palettes.some(function (p) { return p.key === defaultKey; });
+  if (!hasDefault && palettes.length) {
+    defaultKey = palettes[0].key;
   }
-  var defaultFile = defaultPalette ? defaultPalette.file : (palettes[0] && palettes[0].file);
 %>
 <div class="sidebar-section">
   <h3>Palette</h3>
   <div class="palette-switcher">
     <select id="palette-select">
       <% palettes.forEach(function (p) { %>
-      <option value="<%= p.file %>" <%= (defaultPalette && defaultPalette.key === p.key) ? 'selected' : '' %>>
+      <option value="<%= p.key %>" <%= (defaultKey === p.key) ? 'selected' : '' %>>
         <%= p.name || p.key || p.file %>
       </option>
       <% }); %>
@@ -45,53 +70,33 @@
 <% if (palettes.length) { %>
 <script>
   (function() {
-    var STORAGE_KEY = 'theme_palette',
-      paletteLink = document.getElementById('palette-css'),
+    var STORAGE_KEY = 'flux-palette',
       select = document.getElementById('palette-select');
-    if (!paletteLink || !select)
+    if (!select)
       return;
 
-    // Base URL for palette CSS files
-    var base = '<%= url_for("/css/palettes/") %>';
+    // Determine which palette is currently active (from <html>)
+    var html = document.documentElement,
+      current = html.getAttribute('data-palette') || select.value;
 
-    // Collect allowed values from the config-driven <option>s
-    var allowed = Array.prototype.map.call(select.options, function(opt) {
-      return opt.value;
-    });
+    // Keep <select> in sync
+    select.value = current;
 
-    function applyPalette(file) {
-      if (!file)
+    function apply(key) {
+      if (!key)
         return;
-      paletteLink.setAttribute('href', base + file);
-    }
-
-    // On load: try saved palette, but only if it exists in the allowed list
-    try {
-      var saved = localStorage.getItem(STORAGE_KEY);
-      if (saved && allowed.indexOf(saved) !== -1) {
-        applyPalette(saved);
-        select.value = saved;
-      } else {
-        // if no valid saved value, sync storage with current default selected option
-        var current = select.value;
-        if (current && allowed.indexOf(current) !== -1) {
-          applyPalette(current);
-          localStorage.setItem(STORAGE_KEY, current);
-        }
-      }
-    } catch (e) {
-      // ignore storage errors
-    }
-
-    // On change: apply palette
-    select.addEventListener('change', function() {
-      var file = this.value;
-      applyPalette(file);
+      key = String(key).replace(/[^a-zA-Z0-9_-]/g, '');
+      html.setAttribute('data-palette', key);
       try {
-        localStorage.setItem(STORAGE_KEY, file);
+        localStorage.setItem(STORAGE_KEY, key);
       } catch (e) {
         // ignore
       }
+    }
+
+    // On change, just flip the attribute + persist
+    select.addEventListener('change', function() {
+      apply(this.value);
     });
   })();
 </script>

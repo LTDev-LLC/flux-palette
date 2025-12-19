@@ -1,28 +1,62 @@
-<div class="header-inner">
-  <div class="logo">
-    <a href="<%= config.root %>">
-      <span class="logo-mark">●</span>
-      <span class="logo-text-wrap">
-        <span class="logo-text">
-          <%= theme.logo_text || config.title %>
+<%
+  var primaryMenu = config.menu || {},
+    themeMenu = theme.menu || {};
+
+  var mergedMenu = {};
+  Object.keys(primaryMenu).forEach(function (k) { mergedMenu[k] = primaryMenu[k]; });
+  Object.keys(themeMenu).forEach(function (k) { mergedMenu[k] = themeMenu[k]; });
+
+  var menuKeys = Object.keys(mergedMenu);
+  if (!menuKeys.length) {
+    mergedMenu = {
+      Home: '/',
+    };
+    menuKeys = Object.keys(mergedMenu);
+  }
+
+  function isExternal(href) {
+    return /^https?:\/\//i.test(href);
+  }
+%>
+<header class="site-header">
+  <div class="header-inner">
+    <div class="logo">
+      <a href="<%= config.root %>">
+        <span class="logo-mark">●</span>
+        <span class="logo-text-wrap">
+          <span class="logo-text">
+            <%= theme.logo_text || config.title %>
+          </span>
+          <% if (theme.subtitle || config.subtitle) { %>
+          <span class="logo-subtitle">
+            <%= theme.subtitle || config.subtitle %>
+          </span>
+          <% } %>
         </span>
-        <% if (theme.subtitle || config.subtitle) { %>
-        <span class="logo-subtitle">
-          <%= theme.subtitle || config.subtitle %>
-        </span>
-        <% } %>
+      </a>
+    </div>
+    <button class="nav-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false" aria-controls="main-nav">
+      <span class="nav-toggle-box">
+        <span class="nav-toggle-line"></span>
+        <span class="nav-toggle-line"></span>
+        <span class="nav-toggle-line"></span>
       </span>
-    </a>
+    </button>
+    <nav class="main-nav" id="main-nav">
+      <ul>
+        <% menuKeys.forEach(function(label) { %>
+        <%
+          var href = mergedMenu[label],
+            external = isExternal(href),
+            url = external ? href : url_for(href);
+        %>
+        <li>
+          <a href="<%= url %>" <% if (external) { %> target="_blank" rel="noopener" <% } %>>
+            <%= label %>
+          </a>
+        </li>
+        <% }); %>
+      </ul>
+    </nav>
   </div>
-  <nav class="main-nav">
-    <ul>
-      <% for (var name in theme.menu) { %>
-      <li>
-        <a href="<%= url_for(theme.menu[name]) %>" class="<%= (url_for(path) === url_for(theme.menu[name])) ? 'active' : '' %>">
-          <%= name %>
-        </a>
-      </li>
-      <% } %>
-    </ul>
-  </nav>
-</div>
+</header>
