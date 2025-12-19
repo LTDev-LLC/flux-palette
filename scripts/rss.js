@@ -1,5 +1,4 @@
 'use strict';
-
 const { stripHTML } = require('hexo-util');
 
 const xmlEscape = (str) => {
@@ -17,8 +16,12 @@ hexo.extend.generator.register('theme_rss', function (locals) {
     const { config, theme } = this,
         urlFor = this.extend.helper.get('url_for').bind(this);
 
+    // Check if RSS is enabled
+    if (theme?.config?.rss?.enabled === false)
+        return {};
+
     // Merge defaults with theme config for cleaner access
-    const themeRss = theme.rss || {},
+    const themeRss = theme.config?.rss || {},
         feedCfg = {
             path: themeRss.path || 'rss.xml',
             limit: typeof themeRss.limit === 'number' ? themeRss.limit : 20,

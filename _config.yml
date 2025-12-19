@@ -26,6 +26,7 @@ sidebar:
     palette_folder: css/palettes # folder for palette css files
 
 rss: # RSS feed options
+  enabled: true # set to false to turn off RSS feed
   path: rss.xml # output file (relative to root)
   limit: 20 # number of posts
   include_drafts: false
