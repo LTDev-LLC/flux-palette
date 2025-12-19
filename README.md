@@ -117,8 +117,30 @@ Below is the default config for Flux Palette found within [_config.yml](/_config
 ```yml
 menu: # site menu
   Home: /
+  Projects: /projects/
   Archives: /archives/
+  Search : /search/
   Feed: /rss.xml
+
+home: # home page configuration
+  mode: blog # "blog" or "projects"
+
+search: # search
+  enabled: true # set to false to turn off search
+  title: "Search" # page title
+
+sidebar:
+  recent_projects:
+    enabled: true # set false to hide the section
+    limit: 5 # how many recent projects to show
+  social_buttons: # social buttons
+    enabled: true # set to false to turn off social buttons
+    inject_iconify: true # set to false to turn off Iconify
+    size: 2.5em # icon size
+  palette_selector: # palette selector
+    enabled: true # set to false to turn off palette selector
+    default: abyssal-blue # default palette selection
+    palette_folder: css/palettes # folder for palette css files
 
 rss: # RSS feed options
   path: rss.xml # output file (relative to root)
@@ -130,7 +152,6 @@ rss: # RSS feed options
 
 short_url: # short URL options
   enabled: true # set to false to turn off all short URLs
-  prefix: s # /s/<hash>
   length: 6 # characters in hash
 
 swc:
@@ -144,10 +165,5 @@ swc:
 read_time: # read time options
   enabled: true # set to false to turn off read time
   write_front_matter: true # write read time to front matter
-
-palette_selector: # palette selector
-  enabled: true # set to false to turn off palette selector
-  default: abyssal-blue # default palette selection
-  palette_folder: css/palettes # folder for palette css files
 ```
 
