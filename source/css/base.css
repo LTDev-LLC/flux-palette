@@ -1,6 +1,7 @@
 :root {
     /* Layout & Sizes */
     --width-max: 1200px;
+    --width-ultrawide: 1800px;
     --radius-lg: 12px;
     --radius-xl: 18px;
     --sidebar-offset: 80px;
@@ -84,6 +85,7 @@ svg {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    transition: max-width var(--transition-slower);
 }
 
 .header-inner a:hover {
@@ -204,6 +206,7 @@ svg {
     display: grid;
     grid-template-columns: minmax(0, 3fr) minmax(260px, 1fr);
     gap: 2rem;
+    transition: max-width var(--transition-slower);
 }
 
 .site-sidebar {
@@ -446,6 +449,7 @@ h2.post-title {
     align-items: center;
     color: var(--muted);
     font-size: 0.85rem;
+    transition: max-width var(--transition-slower);
 }
 
 .footer-right a {
@@ -784,6 +788,30 @@ figure {
     margin-top: 1.25rem;
 }
 
+/* Spotify embed */
+.spotify-embed-inline {
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin-bottom: 4px;
+}
+
+.spotify-embed-inline iframe {
+    display: block;
+    width: 100%;
+    height: 80px;
+}
+
+.post-content p > .spotify-embed-inline {
+    display: inline-block;
+    margin: 0;
+}
+
+.post-content p:has(.spotify-embed-inline) {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
 /* Responsive */
 @media (max-width: 900px) {
     :root {
@@ -879,30 +907,6 @@ figure {
     }
 }
 
-/* Spotify embed */
-.spotify-embed-inline {
-    background: transparent;
-    border: none;
-    padding: 0;
-    margin-bottom: 4px;
-}
-
-.spotify-embed-inline iframe {
-    display: block;
-    width: 100%;
-    height: 80px;
-}
-
-.post-content p > .spotify-embed-inline {
-    display: inline-block;
-    margin: 0;
-}
-
-.post-content p:has(.spotify-embed-inline) {
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-}
-
 @media (min-width: 769px) {
     .main-nav {
         display: block;
@@ -968,5 +972,40 @@ figure {
     }
     .nav-toggle.is-open .nav-toggle-line:nth-child(3) {
         transform: translateY(-6px) rotate(-45deg);
+    }
+}
+
+@media (min-width: 2500px) {
+    :root {
+        --width-max: var(--width-ultrawide);
+    }
+
+    .site-body {
+        grid-template-columns: minmax(0, 4fr) minmax(350px, 1fr);
+        gap: 4rem;
+        margin-top: 4rem;
+    }
+
+    .post-card,
+    .post-single,
+    .page-single {
+        padding: 2.5rem 3rem;
+        margin-bottom: 2rem;
+    }
+
+    h1 {
+        font-size: 2.8rem;
+    }
+    h2 {
+        font-size: 2.2rem;
+    }
+
+    .sidebar-section {
+        padding: 2rem;
+    }
+
+    .sidebar-logo img {
+        max-width: 240px;
+        max-height: 240px;
     }
 }
