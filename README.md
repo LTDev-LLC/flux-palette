@@ -11,11 +11,12 @@ A responsive blog/journal [Hexo](https://hexo.io/) theme designed around the ide
 
 ## Features
 
-- Mobile friendly
+- Mobile friendly/responsive
 - Multiple [color palettes](/source/css/palettes/)
   * Has support for user selection via select dropdown or can be disabled within the config
 - Password encrypted posts
 - Pre-compile JavaScript via [swc](https://swc.rs/)
+  * Used to compile Alpine.js features. Can compile any other added JavaScript.
 - Approx. read time (default 238 wpm)
 - RSS feed generator
 - URL shortener/post hash generator
@@ -23,6 +24,8 @@ A responsive blog/journal [Hexo](https://hexo.io/) theme designed around the ide
 - Social links/icons
 - Local search
 - Archived post listing
+
+***Note: Uses [Alpine.js](https://alpinejs.dev/) for some UI features.***
 
 ## Install
 

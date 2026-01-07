@@ -66,7 +66,9 @@ function getPalettes(ctx) {
 
 
 // Returns a list of available palettes
-hexo.extend.helper.register('palette_list', function () { return getPalettes(this) });
+hexo.extend.helper.register('palette_list', function () {
+    return getPalettes(this)?.map?.(p => ({ key: p.key, name: p.name, file: p.file, mode: p.mode })) || [];
+});
 
 // Generate a bundle of all palettes to `css/palettes.css`
 hexo.extend.generator.register('theme_palettes_bundle', function () {

@@ -4,7 +4,7 @@
 </div>
 <% if (has_social_buttons()) { %>
 <div class="sidebar-section social-buttons">
-    <%- social_buttons() %>
+  <%- social_buttons() %>
 </div>
 <% } %>
 <div class="sidebar-section">
@@ -57,54 +57,13 @@ var sidebarCfg = theme.sidebar || {},
 %>
 <div class="sidebar-section">
   <h3>Palette</h3>
-  <div class="palette-switcher">
-    <select id="palette-select">
-      <% palettes.forEach(function (p) { %>
-      <option value="<%= p.key %>" <%= (defaultKey === p.key) ? 'selected' : '' %>>
-        <%= p.name || p.key || p.file %> <%= p.mode === 'light' ? '(Light)' : '' %>
-      </option>
-      <% }); %>
+  <div class="palette-switcher" x-data="paletteSwitcher(<%= JSON.stringify(palettes) %>, '<%= defaultKey %>')">
+    <select id="palette-select" x-model="currentPalette">
+      <template x-for="p in palettes" :key="p.key">
+        <option :value="p.key" x-text="p.name || p.key || p.file + (p.mode === 'light' ? ' (Light)' : '')"></option>
+      </template>
     </select>
   </div>
 </div>
-<% if (palettes.length) { %>
-<script>
-  (function() {
-    var STORAGE_KEY = 'flux-palette',
-      select = document.getElementById('palette-select');
-    if (!select)
-      return;
-
-    // Determine which palette is currently active (from <html>)
-    var html = document.documentElement,
-      current = html.getAttribute('data-palette') || select.value;
-
-    // Keep <select> in sync
-    select.value = current;
-
-    function apply(key) {
-      if (!key)
-        return;
-      key = String(key).replace(/[^a-zA-Z0-9_-]/g, '');
-      html.setAttribute('data-palette', key);
-      try {
-        localStorage.setItem(STORAGE_KEY, key);
-      } catch (e) {
-        // ignore
-      }
-      let curHash = {}
-      try {
-        curHash = new URLSearchParams(window.location.hash.substring(1) ?? '');
-      } catch (e) {}
-      curHash.set('theme', key);
-      window.location.hash = curHash.toString();
-    }
-
-    // On change, just flip the attribute + persist
-    select.addEventListener('change', function() {
-      apply(this.value);
-    });
-  })();
-</script>
-<% } %>
+<script src="<%= url_for('/js/palette-switcher.js') %>"></script>
 <% } %>

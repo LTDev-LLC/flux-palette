@@ -1,29 +1,30 @@
-<section class="post-index search-page">
+<section class="post-index search-page" x-data="search()">
   <h1 class="post-title"><%= page.title || 'Search' %></h1>
   <div class="search-box">
     <div class="search-input-wrapper">
-      <input type="text" id="local-search-input" placeholder="Enter search keywords" autocomplete="off">
-      <button type="button" id="local-search-clear" class="search-clear-btn" aria-label="Clear search">
+      <input type="text" id="local-search-input" placeholder="Enter search keywords" autocomplete="off" x-model.debounce.300ms="query" x-ref="searchInput">
+      <button type="button" id="local-search-clear" class="search-clear-btn" aria-label="Clear search" @click="clearSearch()" x-show="query">
         &times;
       </button>
     </div>
   </div>
-  <div id="local-search-results" class="search-results"></div>
-  <template id="local-search-result-template">
-    <article class="post-card search-result">
-      <h2 class="post-title">
-        <a class="result-link"></a>
-        <span class="result-lock" hidden>
-          <%- partial('partial/lock') %>
-        </span>
-      </h2>
-      <div class="post-meta">
-        <span class="result-type"></span>
-        <span class="meta-sep" hidden>-</span>
-        <time class="result-date"></time>
-      </div>
-      <div class="post-excerpt result-excerpt"></div>
-    </article>
-  </template>
+  <div id="local-search-results" class="search-results">
+    <template x-for="result in results" :key="result.url">
+      <article class="post-card search-result">
+        <h2 class="post-title">
+          <a :href="result.url" x-text="result.title || '(Untitled)'"></a>
+          <span class="result-lock" x-show="result.encrypted">
+            <%- partial('partial/lock') %>
+          </span>
+        </h2>
+        <div class="post-meta">
+          <span x-text="result.type === 'project' ? 'Project' : 'Post'"></span>
+          <span class="meta-sep" x-show="result.date">-</span>
+          <time x-text="result.date ? new Date(result.date).toISOString().slice(0, 10) : ''"></time>
+        </div>
+        <div class="post-excerpt result-excerpt" x-text="result.excerpt || ''"></div>
+      </article>
+    </template>
+  </div>
 </section>
 <script src="<%= url_for('/js/local-search.js') %>"></script>

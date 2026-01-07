@@ -8,8 +8,8 @@ menu: # site menu
 home: # home page configuration
   mode: blog # "blog" or "projects"
 
-search: # search
-  enabled: true # set to false to turn off search
+search: # local search
+  enabled: true # set to false to turn off local search
   title: "Search" # page title
 
 sidebar:

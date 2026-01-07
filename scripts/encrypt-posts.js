@@ -33,22 +33,24 @@ hexo.extend.filter.register('after_post_render', async function (data) {
 
     // Replace content with UI Placeholder
     data.content = `
-    <div class="encrypted-post" id="encrypted-${data.slug}" data-slug="${data.slug}" data-payload="${encodedPayload}">
-      <div class="encrypted-form">
+    <div class="encrypted-post" x-data="encryptedPost('${data.slug}', '${encodedPayload}')">
+      <div class="encrypted-form" x-show="!decryptedContent">
         <div class="encrypted-input-wrap">
           <input
             type="password"
             class="encrypted-input"
-            id="pass-${data.slug}"
+            x-model="password"
+            @keydown.enter.prevent="handleUnlock"
+            :id="'pass-' + slug"
             placeholder=" "
             autocomplete="off"
           >
-          <label class="encrypted-label">Enter password</label>
+          <label class="encrypted-label" :for="'pass-' + slug">Enter password</label>
         </div>
-        <button type="button" class="encrypted-button" id="btn-${data.slug}">Unlock</button>
-        <p class="encrypted-error" id="error-${data.slug}" style="display:none;"></p>
+        <button type="button" class="encrypted-button" @click="handleUnlock" :disabled="isDecrypting">Unlock</button>
+        <p class="encrypted-error" x-show="error" x-text="error" style="display:none;"></p>
       </div>
-      <div class="encrypted-post-content" id="content-${data.slug}" style="display:none;"></div>
+      <div class="encrypted-post-content" x-show="decryptedContent" x-html="decryptedContent"></div>
     </div>`;
 
     // Data Hygiene
