@@ -105,7 +105,11 @@ You can add a list of active projects using a `source/_projects` folder similar 
 ---
 title: Flux Palette
 date: 2025-12-1
-project_url: https://github.com/LTDev-LLC/flux-palette
+buttons:
+  - name: GitHub
+    url: https://github.com/LTDev-LLC/flux-palette
+  - name: Demo
+    url: https://flux-palette.pages.dev/
 project_summary: "The Flux Palette source."
 project_tags:
   - javascript

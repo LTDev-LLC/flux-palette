@@ -47,16 +47,17 @@
 
     <div class="post-meta-bottom">
       <nav>
-        <a href="<%= url_for(project.path) %>" class="read-more">
+        <a href="<%= url_for(project.path) %>" class="post-btn">
           Read more
         </a>
-        <% if (project.project_url) { %>
-        <span class="meta-sep">&nbsp;</span>
-        <a href="<%= project.project_url %>" class="read-more" target="_blank" rel="noopener">
-          View project
+        <% if (project.buttons && project.buttons.length) { %>
+        <% project.buttons.forEach(function(button) { %>
+        <a href="<%= button.url %>" class="post-btn" target="_blank" rel="noopener">
+          <%= button.text || button.name %>
         </a>
+        <% }); %>
+        <% } %>
       </nav>
-      <% } %>
       <% var hash = short_hash_for(project.path); %>
       <% if (hash) { %>
       <a href="<%= url_for('/s/' + hash + '/') %>">

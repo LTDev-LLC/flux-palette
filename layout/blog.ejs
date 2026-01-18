@@ -51,7 +51,7 @@
     <% } %>
 
     <div class="post-meta-bottom">
-      <a class="read-more" href="<%= url_for(post.path) %>">Read more →</a>
+      <a class="post-btn" href="<%= url_for(post.path) %>">Read More</a>
       <% if (post.short_hash) { %>
       <a href="<%= url_for('/s/' + post.short_hash + '/') %>">
         #<%= post.short_hash %>

@@ -591,7 +591,7 @@ a:hover {
     text-align: center;
 }
 
-.read-more,
+.post-btn,
 .encrypted-button {
     display: inline-flex;
     align-items: center;
@@ -615,11 +615,16 @@ a:hover {
         opacity var(--transition-fast);
 }
 
-.read-more:hover,
+.post-btn:hover,
 .encrypted-button:hover:not(:disabled) {
     background: var(--accent);
     color: var(--text-white);
     box-shadow: 0 0 20px var(--focus-ring);
+}
+
+.post-btn:not(:first-child),
+.encrypted-button:not(:first-child) {
+    margin-left: 0.5rem;
 }
 
 .encrypted-button:disabled {

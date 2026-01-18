@@ -1,12 +1,12 @@
 menu: # site menu
   Home: /
-  Projects: /projects/
+  Blog: /blog/
   Archives: /archives/
   Search : /search/
   Feed: /rss.xml
 
 home: # home page configuration
-  mode: blog # "blog" or "projects"
+  mode: projects # "blog" or "projects"
 
 blog: # blog page configuration
   title: "Blog" # custom title
@@ -28,7 +28,7 @@ sidebar:
     size: 2.5em # icon size
   palette_selector: # palette selector
     enabled: true # set to false to turn off palette selector
-    default: abyssal-blue # default palette selection
+    default: midnight-sun # default palette selection
     palette_folder: css/palettes # folder for palette css files
 
 rss: # RSS feed options

@@ -29,10 +29,14 @@
   <% } %>
 
   <div class="post-meta-bottom">
-    <% if (page.project.project_url) { %>
-    <a href="<%= page.project.project_url %>" class="read-more" target="_blank" rel="noopener">
-      View project
-    </a>
+    <% if (page.project.buttons && page.project.buttons.length) { %>
+    <nav>
+      <% page.project.buttons.forEach(function(button) { %>
+      <a href="<%= button.url %>" class="post-btn" target="_blank" rel="noopener">
+        <%= button.text || button.name %>
+      </a>
+      <% }); %>
+    </nav>
     <% } %>
     <% var hash = short_hash_for(page.project.path); %>
     <% if (hash) { %>
