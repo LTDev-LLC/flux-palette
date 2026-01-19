@@ -242,5 +242,11 @@ swc:
 read_time: # read time options
   enabled: true # set to false to turn off read time
   write_front_matter: true # write read time to front matter
+
+# Show theme credit. Feeds our ego. Please, we're starving.
+attribution: # attribution options
+  enabled: true # set to false to turn off attribution
+  link: https://github.com/LTDev-LLC/flux-palette
+  text: Flux Palette by LTDev LLC
 ```
 

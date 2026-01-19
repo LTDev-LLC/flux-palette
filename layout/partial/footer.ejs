@@ -1,5 +1,11 @@
 <div class="footer-inner">
   <div class="footer-left">
-    <span>&copy; <%= new Date().getFullYear() %> <%= config.author %></span>
+    &copy; <%= new Date().getFullYear() %> <%= config.author %>
   </div>
+
+  <% if (theme.attribution && theme.attribution.enabled) { %>
+  <div class="footer-right">
+    <a href="<%= theme.attribution.link %>"><%= theme.attribution.text %></a>
+  </div>
+  <% } %>
 </div>

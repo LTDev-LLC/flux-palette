@@ -18,7 +18,7 @@
     --transition-slowest: 0.5s ease-out;
 }
 
-/* Ultrawide Overrides */
+/* Ultrawide overrides */
 @media (min-width: 2500px) {
     :root {
         --width-max: var(--width-ultrawide);
@@ -477,6 +477,8 @@ h2.post-title {
     color: var(--accent);
     text-decoration: none;
     margin-left: 0.8rem;
+    font-size: 12px;
+    font-style: italic;
 }
 
 .footer-right a:hover {
@@ -617,7 +619,7 @@ a:hover {
 
 .post-btn:hover,
 .encrypted-button:hover:not(:disabled) {
-    background: var(--accent);
+    background: var(--accent-soft);
     color: var(--text-white);
     box-shadow: 0 0 20px var(--focus-ring);
 }
