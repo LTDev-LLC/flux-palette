@@ -45,7 +45,13 @@
     </a>
     <% } %>
   </div>
+  <% if (theme.comments && theme.comments.enabled) {
+     if (('comments' in page.project && page.project.comments !== false)) { %>
   <%- partial('partial/comments') %>
+  <% } else { %>
+  <hr />
+  Comments have been disabled for this project.
+  <% } } %>
   <% } else { %>
   <p>Project data missing.</p>
   <% } %>

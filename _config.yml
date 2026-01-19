@@ -43,14 +43,17 @@ short_url: # short URL options
   enabled: true # set to false to turn off all short URLs
   length: 6 # characters in hash
 
-comments: # comment system settings
-  enabled: false
-  service: giscus # 'giscus' or 'utterances'
+# Enable comments service (either 'giscus' or 'utterances')
+# See https://giscus.app/#repository for giscus settings
+# See https://utteranc.es/#install for utterances settings
+comments:
+  enabled: true
+  service: giscus # Options: 'giscus', 'utterances'
   giscus:
-    repo: ""
-    repo_id: ""
-    category: ""
-    category_id: ""
+    repo: "username/repository" # [Required]
+    repo_id: "R_..." # [Required]
+    category: "General" # [Required]
+    category_id: "DIC_..." # [Required]
     mapping: "pathname"
     reactions_enabled: "1"
     emit_metadata: "0"
@@ -58,7 +61,7 @@ comments: # comment system settings
     theme: "preferred_color_scheme"
     lang: "en"
   utterances:
-    repo: ""
+    repo: "username/repository" # [Required]
     issue_term: "pathname"
     label: "comments"
     theme: "github-light"

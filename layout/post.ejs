@@ -44,7 +44,13 @@
     </a>
     <% } %>
   </div>
+  <% if (theme.comments && theme.comments.enabled) { %>
+  <% if (('comments' in page && page.comments !== false) && !page.encrypted) { %>
   <%- partial('partial/comments') %>
+  <% } else { %>
+  <hr />
+  Comments have been disabled for this project.
+  <% } } %>
 </article>
 <% if (page.encrypted) { %>
 <script src="<%= url_for('/js/encrypted-post.js') %>"></script>
