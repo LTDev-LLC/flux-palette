@@ -33,7 +33,7 @@ A responsive blog/journal [Hexo](https://hexo.io/) theme designed around the ide
    * Optionally, install `@swc/core` for use with pre-compilation.
 
 ```bash
-$ git clone --depth=1 https://github.com/LTDev-LLC/flux-palette.git themes/flux-palette ; rm -rf !$/.git
+$ git clone --depth=1 https://github.com/LTDev-LLC/hexo-theme-flux-palette.git themes/flux-palette ; rm -rf !$/.git
 $ npm install @swc/core --save
 ```
 
@@ -41,7 +41,7 @@ OR updating:
 
 ```bash
 $ cp themes/flux-palette/_config.yml theme-config.yml ; rm -rf themes/flux-palette
-$ git clone --depth=1 https://github.com/LTDev-LLC/flux-palette.git themes/flux-palette ; rm -rf !$/.git
+$ git clone --depth=1 https://github.com/LTDev-LLC/hexo-theme-flux-palette.git themes/flux-palette ; rm -rf !$/.git
 $ mv theme-config.yml themes/flux-palette/_config.yml
 ```
 
@@ -88,7 +88,7 @@ You can display social links/icons in the sidenav by adding a `social` config to
 ```yml
 social:
   - name: GitHub
-    url: https://github.com/LTDev-LLC/flux-palette
+    url: https://github.com/LTDev-LLC/hexo-theme-flux-palette
     icon: mdi:github
   - name: Website
     url: https://flux-palette.ltdev.llc/
@@ -107,7 +107,7 @@ title: Flux Palette
 date: 2025-12-1
 buttons:
   - name: GitHub
-    url: https://github.com/LTDev-LLC/flux-palette
+    url: https://github.com/LTDev-LLC/hexo-theme-flux-palette
   - name: Demo
     url: https://flux-palette.pages.dev/
 project_summary: "The Flux Palette source."
@@ -246,7 +246,7 @@ read_time: # read time options
 # Show theme credit. Feeds our ego. Please, we're starving.
 attribution: # attribution options
   enabled: true # set to false to turn off attribution
-  link: https://github.com/LTDev-LLC/flux-palette
+  link: https://github.com/LTDev-LLC/hexo-theme-flux-palette
   text: Flux Palette by LTDev LLC
 ```
 
