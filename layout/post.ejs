@@ -1,4 +1,6 @@
-<article class="post-single">
+<article class="post-single" x-data="readingProgress">
+  <div class="reading-progress-bar" :style="`width: ${progress}%`"></div>
+
   <h2 class="post-title">
     <a href="<%= url_for(page.path) %>"><%= page.title %></a>
   </h2>
@@ -19,8 +21,21 @@
     <% } %>
   </div>
 
-  <div class="post-content">
-    <%- page.content %>
+  <% var postToc = toc(page.content, {class: 'toc', list_number: false}); %>
+  <% if (postToc) { %>
+  <div class="post-toc" x-data="{ open: false }">
+    <button type="button" class="post-btn post-toc-toggle" @click="open = !open" :aria-expanded="open">
+      <span>Table of Contents</span>
+      <span x-text="open ? '−' : '+'"></span>
+    </button>
+    <div class="post-toc-content" x-show="open" x-transition>
+      <%- postToc %>
+    </div>
+  </div>
+  <% } %>
+
+  <div class="post-content" x-ref="content">
+    <%- page.content || '' %>
   </div>
 
   <% if (page.tags && page.tags.length) { %>
@@ -56,6 +71,7 @@
   Comments have been disabled for this project.
   <% } } %>
 </article>
+<script src="<%= url_for('/js/reading-progress.js') %>"></script>
 <% if (page.encrypted) { %>
 <script src="<%= url_for('/js/encrypted-post.js') %>"></script>
 <% } %>

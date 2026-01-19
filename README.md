@@ -104,7 +104,7 @@ social:
 
 ### Projects listings
 
-You can add a list of active projects using a `source/_projects` folder similar to how posts work.
+You can add a list of active projects using a `source/_projects` folder similar to how posts work. You may also sort the projects by `weight` (descending) in the front matter.
 
 ##### Example `source/_projects/flux-palette.md`
 
@@ -112,6 +112,7 @@ You can add a list of active projects using a `source/_projects` folder similar 
 ---
 title: Flux Palette
 date: 2025-12-1
+weight: 100
 buttons:
   - name: GitHub
     url: [https://github.com/LTDev-LLC/hexo-theme-flux-palette](https://github.com/LTDev-LLC/hexo-theme-flux-palette)

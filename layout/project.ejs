@@ -1,4 +1,6 @@
-<article class="post-single">
+<article class="post-single" x-data="readingProgress">
+  <div class="reading-progress-bar" :style="`width: ${progress}%`"></div>
+
   <h2 class="post-title">
     <%= page.title || (page.project && page.project.title) %>
   </h2>
@@ -15,7 +17,20 @@
     <% } %>
   </div>
 
-  <div class="post-content">
+  <% var projectToc = toc(page.project.content, {class: 'toc', list_number: false}); %>
+  <% if (projectToc) { %>
+  <div class="post-toc" x-data="{ open: false }">
+    <button type="button" class="post-btn post-toc-toggle" @click="open = !open" :aria-expanded="open">
+      <span>Table of Contents</span>
+      <span x-text="open ? '−' : '+'"></span>
+    </button>
+    <div class="post-toc-content" x-show="open" x-transition>
+      <%- projectToc %>
+    </div>
+  </div>
+  <% } %>
+
+  <div class="post-content" x-ref="content">
     <%- page.project.content || '' %>
   </div>
 
@@ -56,3 +71,4 @@
   <p>Project data missing.</p>
   <% } %>
 </article>
+<script src="<%= url_for('/js/reading-progress.js') %>"></script>

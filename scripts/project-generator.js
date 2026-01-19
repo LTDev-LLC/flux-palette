@@ -50,7 +50,14 @@ async function loadProjects(ctx) {
         });
     }
 
-    return (projectsCache = projects.sort((a, b) => b.date - a.date));
+    // Sort the projects by weight and date (descending)
+    return (projectsCache = projects.sort((a, b) => {
+        const wA = a.weight || 0,
+            wB = b.weight || 0;
+        if (wA !== wB)
+            return wB - wA;
+        return b.date - a.date;
+    }));
 }
 
 // Generator: /projects + paginated pages + project detail pages + project tags
