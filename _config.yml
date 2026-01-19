@@ -28,7 +28,8 @@ sidebar:
     size: 2.5em # icon size
   palette_selector: # palette selector
     enabled: true # set to false to turn off palette selector
-    default: abyssal-blue # default palette selection
+    default_dark: midnight-sun # default dark palette
+    default_light: paper-and-ink # default light palette
     palette_folder: css/palettes # folder for palette css files
 
 rss: # RSS feed options

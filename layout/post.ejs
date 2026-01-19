@@ -18,9 +18,11 @@
     <% }) %>
     <% } %>
   </div>
+
   <div class="post-content">
     <%- page.content %>
   </div>
+
   <% if (page.tags && page.tags.length) { %>
   <div class="post-tags">
     Tags:
@@ -29,6 +31,7 @@
     <% }) %>
   </div>
   <% } %>
+
   <div class="post-meta-bottom">
     <nav class="post-nav">
       <% if (page.prev) { %>
@@ -44,6 +47,7 @@
     </a>
     <% } %>
   </div>
+
   <% if (theme.comments && theme.comments.enabled) { %>
   <% if (('comments' in page && page.comments !== false) && !page.encrypted) { %>
   <%- partial('partial/comments') %>

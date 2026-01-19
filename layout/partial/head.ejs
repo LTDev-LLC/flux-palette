@@ -33,22 +33,34 @@
 <% } %>
 <%
   var palettes = palette_list ? palette_list() : [],
-    defaultKey = (
-        theme.sidebar?.palette_selector && theme.sidebar.palette_selector?.default
-    ) ? theme.sidebar.palette_selector.default : 'abyssal-blue';
-  var hasDefault = palettes.some(function (p) { return p.key === defaultKey; });
-  if (!hasDefault && palettes.length) {
-    defaultKey = palettes[0].key;
-  }
+    pSelector = (theme.sidebar && theme.sidebar.palette_selector) ? theme.sidebar.palette_selector : {},
+    defaultDark = pSelector.default_dark || 'midnight-sun',
+    defaultLight = pSelector.default_light || 'paper-and-ink';
 %>
 <script>
   (function() {
-    var fallback = '<%= defaultKey %>';
-    key = fallback;
+    // Configured defaults
+    var defaultDark = '<%= defaultDark %>',
+      defaultLight = '<%= defaultLight %>';
+
+    // Determine preference
+    var pref = 'auto';
     try {
       let hashget = new URLSearchParams(window.location.hash.substring(1) ?? '');
-      key = hashget.get('theme') || localStorage.getItem('flux-palette-theme') || fallback;
+      pref = hashget.get('theme') || localStorage.getItem('flux-palette-theme') || 'auto';
     } catch (e) {}
+
+    // Resolve 'auto' to actual palette key
+    var key = pref;
+    if (pref === 'auto') {
+      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        key = defaultDark;
+      } else {
+        key = defaultLight;
+      }
+    }
+
+    // Apply
     document.documentElement.setAttribute('data-palette', String(key).replace(/[^a-zA-Z0-9_-]/g, ''));
   })();
 </script>

@@ -9,7 +9,8 @@ function getOptions(themeConfig) {
     const cfg = (themeConfig && themeConfig.sidebar && themeConfig.sidebar.palette_selector) || {};
     return {
         enabled: cfg.enabled !== false,
-        default: cfg.default || 'blood-red',
+        default_dark: cfg.default_dark || 'midnight-sun',
+        default_light: cfg.default_light || 'paper-and-ink',
         palette_folder: cfg.palette_folder || 'css/palettes'
     };
 }
