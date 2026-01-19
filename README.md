@@ -95,10 +95,10 @@ You can display social links/icons in the sidenav by adding a `social` config to
 ```yml
 social:
   - name: GitHub
-    url: [https://github.com/LTDev-LLC/hexo-theme-flux-palette](https://github.com/LTDev-LLC/hexo-theme-flux-palette)
+    url: https://github.com/LTDev-LLC/hexo-theme-flux-palette
     icon: mdi:github
   - name: Website
-    url: [https://flux-palette.ltdev.llc/](https://flux-palette.ltdev.llc/)
+    url: https://flux-palette.ltdev.llc/
     icon: material-symbols:link
 ```
 
@@ -114,9 +114,9 @@ title: Flux Palette
 date: 2025-12-1
 buttons:
   - name: GitHub
-    url: [https://github.com/LTDev-LLC/hexo-theme-flux-palette](https://github.com/LTDev-LLC/hexo-theme-flux-palette)
+    url: https://github.com/LTDev-LLC/hexo-theme-flux-palette
   - name: Demo
-    url: [https://flux-palette.pages.dev/](https://flux-palette.pages.dev/)
+    url: https://flux-palette.pages.dev/
 project_summary: "The Flux Palette source."
 project_tags:
   - javascript
