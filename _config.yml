@@ -18,6 +18,17 @@ projects: # projects page configuration
 search: # search
   enabled: true # set to false to turn off search
   title: "Search" # page title
+  service: "local" # Change to 'upstash' or 'supabase'
+  upstash:
+    url: "https://your-db.upstash.io"
+    token: "your_primary_token" # Used during 'hexo generate' to upload index
+    read_token: "your_read_only_token" # Exposed to client for searching
+    index: "flux" # Prefix for keys
+  supabase:
+    url: "https://your-project.supabase.co"
+    sec_key: "your_service_role_key" # Used during 'hexo generate'
+    pub_key: "your_anon_key" # Exposed to client
+    table: "flux_search" # Prefix for tables (e.g. flux_search_docs)
 
 backtotop: # back to top button
   enabled: true # set to false to turn off back to top button
@@ -77,7 +88,7 @@ swc:
   include: # folders to include
     - js/
   exclude: [] # folders to exclude
-
+``
 read_time: # read time options
   enabled: true # set to false to turn off read time
   write_front_matter: false # write read time to front matter

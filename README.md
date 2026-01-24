@@ -14,6 +14,7 @@ A responsive blog/journal [Hexo](https://hexo.io/) theme designed around the ide
   * [Embeds](#embeds)
   * [Comments](#comments)
   * [Default _config.yml](#_configyml)
+  * [Search](#search)
 
 ## Features
 
@@ -95,10 +96,10 @@ You can display social links/icons in the sidenav by adding a `social` config to
 ```yml
 social:
   - name: GitHub
-    url: [https://github.com/LTDev-LLC/hexo-theme-flux-palette](https://github.com/LTDev-LLC/hexo-theme-flux-palette)
+    url: https://github.com/LTDev-LLC/hexo-theme-flux-palette
     icon: mdi:github
   - name: Website
-    url: [https://flux-palette.ltdev.llc/](https://flux-palette.ltdev.llc/)
+    url: https://flux-palette.ltdev.llc/
     icon: material-symbols:link
 ```
 
@@ -115,9 +116,9 @@ date: 2025-12-1
 weight: 100
 buttons:
   - name: GitHub
-    url: [https://github.com/LTDev-LLC/hexo-theme-flux-palette](https://github.com/LTDev-LLC/hexo-theme-flux-palette)
+    url: https://github.com/LTDev-LLC/hexo-theme-flux-palette
   - name: Demo
-    url: [https://flux-palette.pages.dev/](https://flux-palette.pages.dev/)
+    url: https://flux-palette.pages.dev/
 project_summary: "The Flux Palette source."
 project_tags:
   - javascript
@@ -184,7 +185,6 @@ Flux Palette supports privacy-focused comment systems: [Giscus](https://www.goog
 
 You may disable comments on specific posts or projects in the front matter. Comments are disabled for any [password protected posts](#password-protected-posts).
 
-
 **Giscus Example:**
 
 ```yml
@@ -227,6 +227,113 @@ comments: false
 ---
 ```
 
+### Search
+
+Flux Palette supports flexible search providers, allowing you to choose between a simple local index or powerful cloud databases. Configure your preferred provider in `_config.yml`.
+
+**Supported Providers:** `local`, `upstash`, `supabase`
+
+```yml
+search:
+  enabled: true
+  title: "Search"
+  service: "local" # Change to 'upstash' or 'supabase'
+  # ... provider specific config below
+```
+
+#### 1. Local Search (Default)
+
+Generates a `search.json` file at build time. Best for small static sites or when you want zero external dependencies.
+
+* **Pros:** Zero setup, completely free, works offline once loaded, private.
+* **Cons:** The entire index is downloaded by the client (can be heavy for large sites), basic "fuzzy" matching.
+
+#### 2. Upstash (Redis)
+
+Uses a serverless Redis database to store the index. This is the recommended option for performance and scalability.
+[Sign up at Upstash](https://upstash.com/)
+
+**Setup:**
+
+1. Create a Redis database in the Upstash console.
+2. Scroll down to the **REST API** section.
+3. Copy the `UPSTASH_REDIS_REST_URL`.
+4. Copy the `UPSTASH_REDIS_REST_TOKEN` (use this as your primary `token` for writing during builds).
+5. Copy a Read-Only token to enable search support on the client side as `read_token`.
+
+**Configuration:**
+
+```yml
+search:
+  enabled: true
+  title: "Search"
+  service: upstash
+  upstash:
+    url: "https://your-db.upstash.io"
+    token: "your_primary_token" # Used during 'hexo generate' to upload index
+    read_token: "your_read_only_token" # Exposed to client for searching
+    index: "flux" # Prefix for keys
+```
+
+* **Pros:** Extremely fast (millisecond latency), excellent fuzzy matching, generous free tier (10k req/day).
+* **Cons:** Requires an external account.
+
+#### 3. Supabase (PostgreSQL)
+
+Uses a Postgres database to store and query the index.
+[Sign up at Supabase](https://supabase.com/)
+
+**Setup:**
+
+1. Create a new project.
+2. Go to the **SQL Editor** and run the following commands to create tables and enable public read access:
+```sql
+-- Create Tables
+CREATE TABLE flux_search_docs (
+  id text PRIMARY KEY,
+  title text,
+  url text,
+  date text,
+  type text,
+  excerpt text,
+  encrypted boolean
+);
+CREATE TABLE flux_search_index (
+  word text PRIMARY KEY,
+  doc_ids text[]
+);
+
+-- Enable RLS
+ALTER TABLE flux_search_docs ENABLE ROW LEVEL SECURITY;
+ALTER TABLE flux_search_index ENABLE ROW LEVEL SECURITY;
+
+-- Allow public read access
+CREATE POLICY "Public read docs" ON flux_search_docs FOR SELECT TO public USING (true);
+CREATE POLICY "Public read index" ON flux_search_index FOR SELECT TO public USING (true);
+```
+3. Go to **Project Settings > Data API**.
+4. Copy the **Project URL**.
+4. Go to **Project Settings > API Keys**.
+6. Copy the `Publishable Key` key (use as `pub_key` for reading).
+5. Copy the `Secret Keys` key (use as `sec_key` for writing).
+
+**Configuration:**
+
+```yml
+search:
+  enabled: true
+  title: "Search"
+  service: supabase
+  supabase:
+    url: "https://your-project.supabase.co"
+    sec_key: "your_service_role_key" # Used during 'hexo generate'
+    pub_key: "your_anon_key" # Exposed to client
+    table: "flux_search" # Prefix for tables (e.g. flux_search_docs)
+```
+
+* **Pros:** Robust relational database, highly scalable, reliable ecosystem.
+* **Cons:** Requires running SQL setup commands manually as well as an external account.
+
 ### _config.yml
 
 Below is the default config for Flux Palette found within [_config.yml](/_config.yml).
@@ -252,6 +359,17 @@ projects: # projects page configuration
 search: # search
   enabled: true # set to false to turn off search
   title: "Search" # page title
+  service: "local" # Change to 'upstash' or 'supabase'
+  upstash:
+    url: "https://your-db.upstash.io"
+    token: "your_primary_token" # Used during 'hexo generate' to upload index
+    read_token: "your_read_only_token" # Exposed to client for searching
+    index: "flux" # Prefix for keys
+  supabase:
+    url: "https://your-project.supabase.co"
+    sec_key: "your_service_role_key" # Used during 'hexo generate'
+    pub_key: "your_anon_key" # Exposed to client
+    table: "flux_search" # Prefix for tables (e.g. flux_search_docs)
 
 backtotop: # back to top button
   enabled: true # set to false to turn off back to top button
