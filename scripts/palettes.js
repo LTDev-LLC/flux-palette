@@ -9,7 +9,7 @@ function getOptions(themeConfig) {
     const cfg = (themeConfig && themeConfig.sidebar && themeConfig.sidebar.palette_selector) || {};
     return {
         enabled: cfg.enabled !== false,
-        default_dark: cfg.default_dark || 'midnight-sun',
+        default_dark: cfg.default_dark || 'solar-amber',
         default_light: cfg.default_light || 'paper-and-ink',
         palette_folder: cfg.palette_folder || 'css/palettes'
     };
@@ -19,10 +19,7 @@ function getOptions(themeConfig) {
 function getPalettes(ctx) {
     if (hexo.env?.env !== 'development' && Array.isArray(PALLETE_CACHE))
         return PALLETE_CACHE;
-
     const options = getOptions(ctx.theme.config);
-    if (!options.enabled)
-        return [];
 
     // e.g. "css" or "css/palettes"
     const folderAbs = path.join(hexo.theme_dir, 'source', (options.palette_folder || 'css/palettes').replace(/^\/+/, '').replace(/\/+$/, ''));
