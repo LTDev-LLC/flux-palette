@@ -157,19 +157,23 @@ hexo.extend.filter.register('after_post_render', async function (data) {
     const iv = await randomBytesAsync(IV_LEN),
         cipher = crypto.createCipheriv(ALGORITHM, key, iv);
 
-    // Construct Payload
-    const encodedPayload = Buffer.from(JSON.stringify({
+    // Store payload in data for the generator to pick up
+    data.encrypted_payload = {
         ct: (cipher.update(data.content, 'utf8', 'base64') + cipher.final('base64')),
         imgs: encryptedImages,
         s: salt.toString('base64'),
         iv: iv.toString('base64'),
         at: cipher.getAuthTag().toString('base64'),
         i: ITERATIONS
-    })).toString('base64');
+    };
+
+    // Determine API URL
+    const root = hexo.config.root || '/',
+        apiUrl = `${root}_encrypted/${data._id || data.slug}.json`;
 
     // Replace content with UI Placeholder
     data.content = `
-    <div class="encrypted-post" x-data="encryptedPost('${data.slug}', '${encodedPayload}')">
+    <div class="encrypted-post" x-data="encryptedPost('${data.slug}', '${apiUrl}')">
       <div class="encrypted-form" x-show="!decryptedContent">
         <div class="encrypted-input-wrap">
           <input
@@ -200,6 +204,16 @@ hexo.extend.filter.register('after_post_render', async function (data) {
     return data;
 });
 
+// Generator to create the JSON data files for encrypted posts
+hexo.extend.generator.register('encrypted_api', function (locals) {
+    return locals.posts.filter(post => post.encrypted && post.encrypted_payload).map(post => {
+        return {
+            path: `_encrypted/${post._id || post.slug}.json`,
+            data: JSON.stringify(post.encrypted_payload, null, 4)
+        };
+    });
+});
+
 // Helper Functions
 function randomBytesAsync(size) {
     return new Promise((res, rej) => crypto.randomBytes(size, (err, buf) => (err || !buf) ? rej(err) : res(buf)));
@@ -214,12 +228,13 @@ async function fetchUrl(url, retries = 3) {
         if (!res.ok) {
             // Don't retry client errors (4xx), but throw to handle failure
             if (res.status < 500) {
-                const err = new Error(`Status Code: ${res.status}`);
+                const err = new Error(`Status Code: ${res.status} `);
                 err.noRetry = true;
                 throw err;
             }
+
             // Throw for 5xx errors to trigger catch block and retry
-            throw new Error(`Status Code: ${res.status}`);
+            throw new Error(`Status Code: ${res.status} `);
         }
 
         // Return image buffer and mime type

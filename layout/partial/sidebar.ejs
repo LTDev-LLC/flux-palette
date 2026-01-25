@@ -88,33 +88,4 @@ var sidebarCfg = theme.sidebar || {},
 </div>
 <% } %>
 
-<% if (theme.sidebar?.palette_selector?.enabled) { %>
-<%
-  var palettes = palette_list ? palette_list() : [],
-    pSelector = (theme.sidebar && theme.sidebar.palette_selector) ? theme.sidebar.palette_selector : {},
-    defaultDark = pSelector.default_dark || 'solar-amber',
-    defaultLight = pSelector.default_light || 'paper-and-ink';
-%>
-<script src="<%= url_for('/js/palette-switcher.js') %>"></script>
-<div class="sidebar-section" x-data="sidebarSection('palette')">
-  <h3 @click="toggle">
-    <span>Palette</span>
-    <span x-text="open ? '-' : '+'"></span>
-  </h3>
-  <div id="sb-palette" class="palette-switcher" x-data="paletteSwitcher(<%= JSON.stringify(palettes) %>, '<%= defaultLight %>', '<%= defaultDark %>')" x-show="open" x-collapse>
-    <select id="palette-select" x-model="currentPalette">
-      <option value="auto">Auto (System)</option>
-      <template x-for="p in palettes" :key="p.key">
-        <option :value="p.key" x-text="(p.name || p.key || p.file) + (p.mode === 'light' ? ' (Light)' : '')" :selected="currentPalette === p.key"></option>
-      </template>
-    </select>
-  </div>
-  <script>
-    (function() {
-      var stored = sessionStorage.getItem('flux-sidebar-palette');
-      if (stored === 'false')
-        document.getElementById('sb-palette').style.display = 'none';
-    })();
-  </script>
-</div>
-<% } %>
+<%- partial('partial/palette-selector') %>

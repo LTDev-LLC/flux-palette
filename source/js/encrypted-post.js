@@ -1,12 +1,11 @@
 document.addEventListener('alpine:init', () => {
-    Alpine.data('encryptedPost', (slug, payloadEncoded) => ({
+    Alpine.data('encryptedPost', (slug, apiUrl) => ({
         slug,
+        apiUrl,
         password: '',
         error: '',
         decryptedContent: '',
         isDecrypting: false,
-        payloadEncoded,
-        errorTimer: null,
         derivedKey: null,
         imagesData: {},
         base64ToUint8Array(b64) {
@@ -66,20 +65,19 @@ document.addEventListener('alpine:init', () => {
         async handleUnlock() {
             if (!this.password)
                 return await this.setError('Please enter a password.');
-            if (!this.payloadEncoded)
-                return await this.setError('No encrypted data found.');
-
-            let payload;
-            try {
-                payload = JSON.parse(atob(this.payloadEncoded));
-            } catch (e) {
-                return await this.setError('Failed to parse encrypted data.');
-            }
+            if (!this.apiUrl)
+                return await this.setError('Configuration error: No API URL found.');
 
             this.isDecrypting = true;
             this.error = '';
 
             try {
+                // Fetch the encrypted payload from the API
+                const response = await fetch(this.apiUrl);
+                if (!response.ok)
+                    throw new Error('Failed to fetch encrypted content.');
+                const payload = await response.json();
+
                 // Derive and cache Key
                 this.derivedKey = await this.deriveKey(
                     this.password,
@@ -105,8 +103,9 @@ document.addEventListener('alpine:init', () => {
                 });
             } catch (e) {
                 console.error(e);
-                this.decryptedContent = '';
-                return await this.setError('Incorrect password or decryption failed.');
+                if (e.name === 'OperationError' || e.message.includes('decrypt'))
+                    return await this.setError('Incorrect password or decryption failed.');
+                return await this.setError('Failed to load content. Please check your connection.');
             } finally {
                 this.isDecrypting = false;
                 this.password = ''; // Clear password from memory
@@ -123,6 +122,7 @@ document.addEventListener('alpine:init', () => {
             if (images.length === 0)
                 return;
 
+            // Setup intersection observer
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {

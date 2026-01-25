@@ -21,6 +21,7 @@ A responsive blog/journal [Hexo](https://hexo.io/) theme designed around the ide
 - Mobile friendly/responsive
 - Multiple [color palettes](/source/css/palettes/)
   * Support for user selection via dropdown or fixed via config
+  * A custom ("flux") color picker/palette generator
 - **SEO & Social Metadata** (Open Graph / Twitter Cards)
 - **Comments** (Giscus & Utterances support)
 - Password encrypted posts

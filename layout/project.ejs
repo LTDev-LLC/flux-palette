@@ -22,7 +22,7 @@
   <div class="post-toc" x-data="{ open: false }">
     <button type="button" class="post-btn post-toc-toggle" @click="open = !open" :aria-expanded="open">
       <span>Table of Contents</span>
-      <span x-text="open ? '−' : '+'"></span>
+      <span x-text="open ? '-' : '+'"></span>
     </button>
     <div class="post-toc-content" x-show="open" x-transition>
       <%- projectToc %>
@@ -60,8 +60,8 @@
     </a>
     <% } %>
   </div>
-  <% if (theme.comments && theme.comments.enabled) {
-     if (!('comments' in page.project) || ('comments' in page.project && page.project.comments !== false)) { %>
+  <% if (theme.comments && theme.comments.enabled) { %>
+  <% if (!('comments' in page.project) || ('comments' in page.project && page.project.comments !== false)) { %>
   <%- partial('partial/comments') %>
   <% } else { %>
   <hr />
