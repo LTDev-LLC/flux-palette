@@ -27,7 +27,7 @@
         <option value="<%= p.key %>"><%= (p.name || p.key) + (p.mode === 'light' ? ' (Light)' : '') %></option>
         <% }); %>
       </select>
-      <div x-show="currentPalette === 'custom'" x-transition class="palette-controls">
+      <div x-show="currentPalette === 'custom'" x-transition class="palette-controls" x-cloak>
         <div class="palette-row">
           <label for="cp-input" class="palette-label">Accent</label>
           <div class="color-swatch-container">

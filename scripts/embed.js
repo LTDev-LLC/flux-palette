@@ -60,7 +60,7 @@ function generateYouTubeEmbed(input) {
 }
 
 // Spotify track, playlist, and artist types
-const SPOTIFY_TYPES = new Set(['track', 'playlist', 'artist']);
+const SPOTIFY_TYPES = new Set(['track', 'playlist', 'artist', 'episode']);
 
 // Extract Spotify track, playlist, and artist IDs
 function extractSpotifyRef(input, forcedType) {
@@ -71,9 +71,9 @@ function extractSpotifyRef(input, forcedType) {
 
     // Regular expression patterns
     const patterns = [
-        { regex: /^spotify:(track|playlist|artist):([a-zA-Z0-9]+)$/, typeIndex: 1, idIndex: 2 },
-        { regex: /open\.spotify\.com\/(track|playlist|artist)\/([a-zA-Z0-9]+)/, typeIndex: 1, idIndex: 2 },
-        { regex: /open\.spotify\.com\/embed\/(track|playlist|artist)\/([a-zA-Z0-9]+)/, typeIndex: 1, idIndex: 2 }
+        { regex: /^spotify:(track|playlist|artist|episode):([a-zA-Z0-9]+)$/, typeIndex: 1, idIndex: 2 },
+        { regex: /open\.spotify\.com\/(track|playlist|artist|episode)\/([a-zA-Z0-9]+)/, typeIndex: 1, idIndex: 2 },
+        { regex: /open\.spotify\.com\/embed\/(track|playlist|artist|episode)\/([a-zA-Z0-9]+)/, typeIndex: 1, idIndex: 2 }
     ];
 
     // Check each pattern
@@ -261,7 +261,7 @@ function generateTikTokEmbed(input) {
 //      {% embed <url/id> [hint] %}
 //      {% embed <url/id> youtube %}
 //      {% embed <url/id> vimeo %}
-//      {% embed <url/id> spotify [track/playlist/artist] %}
+//      {% embed <url/id> spotify [track/playlist/artist/episode] %}
 hexo.extend.tag.register('embed', function (args) {
     if (!args || !args.length)
         return '';
@@ -307,6 +307,5 @@ const embedTags = {
 };
 
 // Loop the embed tags and register them
-for (const tag of Object.keys(embedTags)) {
+for (const tag of Object.keys(embedTags))
     hexo.extend.tag.register(tag, (args) => embedTags[tag](args), { ends: false });
-}

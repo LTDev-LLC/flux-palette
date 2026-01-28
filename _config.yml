@@ -88,7 +88,17 @@ swc:
   include: # folders to include
     - js/
   exclude: [] # folders to exclude
-``
+
+# Syntax highlighting
+syntax_highlighter: highlight.js
+highlight:
+  enable: true # set to false to turn off syntax highlighting
+  line_number: true
+  auto_detect: false
+  tab_replace: ''
+  wrap: true
+  hljs: false # required to be false for Flux Palette styles
+
 read_time: # read time options
   enabled: true # set to false to turn off read time
   write_front_matter: false # write read time to front matter

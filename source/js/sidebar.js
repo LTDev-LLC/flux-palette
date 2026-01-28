@@ -7,16 +7,6 @@ document.addEventListener('alpine:init', () => {
             id: id,
             open: initialOpen,
             init() {
-                // XXX: Improve implementation of auto-closing sidebar
-                // if (stored === null) {
-                //     const onScroll = () => {
-                //         if (document.body.scrollTop > 30) {
-                //             this.open = false;
-                //             document.body.removeEventListener('scroll', onScroll);
-                //         }
-                //     };
-                //     document.body.addEventListener('scroll', onScroll, { passive: true });
-                // }
                 this.$watch('open', val => sessionStorage.setItem(key, val));
             },
             toggle() {

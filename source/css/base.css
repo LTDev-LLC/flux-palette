@@ -35,6 +35,7 @@
 *::before,
 *::after {
     box-sizing: border-box;
+    scroll-padding-top: 160px;
 }
 
 html {
